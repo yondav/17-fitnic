@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Workout, Exercise } = require('../../models');
+const { Workout } = require('../../models');
 
 router.get('/', (req, res) =>
   Workout.find({})
@@ -8,18 +8,24 @@ router.get('/', (req, res) =>
     .catch((err) => res.status(400).json(err))
 );
 
-router.post('/', ({ body }, res) =>
-  Workout.create(body)
+router.post('/', ({ body }, res) => {
+  console.log('post route hit');
+  return Workout.create(body)
     .then((dbWorkout) => res.json(dbWorkout))
-    .catch((err) => res.status(400).json(err))
-);
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).json(err);
+    });
+});
 
-router.put('/:id', ({ params, body }, res) =>
+router.put('/:_id', ({ params, body }, res) => {
+  console.log(body);
   Workout.findOneAndUpdate(
-    { _id: params.id },
-    { $push: { excercises: body } },
-    { upsert: true, useFindandModify: false }
-  ).then((updatedWorkout) => res.json(updatedWorkout))
-);
+    { _id: params._id },
+    { $push: { exercises: body } },
+    { upsert: true, useFindandModify: false },
+    (err, res) => (err ? console.log(err) : console.log(res))
+  );
+});
 
 module.exports = router;

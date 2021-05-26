@@ -96,7 +96,7 @@ function validateInputs() {
 
 async function handleFormSubmit(event) {
   event.preventDefault();
-
+  console.log('howdy');
   let workoutData = {};
 
   if (workoutType === 'cardio') {
