@@ -17,10 +17,16 @@ const workoutSchema = new Schema({
       reps: Number,
     },
   ],
-  totalDuration: {
-    type: Number,
-    default: 0,
-  },
 });
 const Workout = mongoose.model('Workout', workoutSchema);
+
+const totals = Workout.aggregate([
+  {
+    $set: {
+      totalDuration: { $sum: '$exercises.duration' },
+    },
+  },
+]);
+console.log(totals._pipeline[0]['$set']);
+
 module.exports = Workout;
