@@ -24,9 +24,29 @@ router.put('/:_id', ({ params, body }, res) =>
 );
 
 router.get('/range', (req, res) =>
-  Workout.find()
-    .then((data) => res.json(data))
-    .catch((err) => res.json(err))
+  Workout.aggregate(
+    [
+      {
+        $addFields: {
+          totalDuration: {
+            $sum: '$exercises.duration',
+          },
+          combinedWeight: {
+            $sum: '$exercises.weight',
+          },
+        },
+      },
+    ],
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(data);
+        res.json(data);
+      }
+    }
+  )
 );
 
 module.exports = router;
