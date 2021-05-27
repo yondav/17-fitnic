@@ -18,9 +18,10 @@ router.put('/:_id', ({ params, body }, res) =>
   Workout.findOneAndUpdate(
     { _id: params._id },
     { $push: { exercises: body } },
-    { upsert: true, useFindandModify: false },
-    (err, res) => (err ? console.log(err) : console.log(res))
+    { upsert: true, useFindandModify: false }
   )
+    .then((dbWorkout) => res.json(dbWorkout))
+    .catch((err) => res.status(400).json(err))
 );
 
 router.get('/range', (req, res) =>
@@ -37,15 +38,7 @@ router.get('/range', (req, res) =>
         },
       },
     ],
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.send(err);
-      } else {
-        console.log(data);
-        res.json(data);
-      }
-    }
+    (err, data) => (err ? res.send(err) : res.json(data))
   )
 );
 
