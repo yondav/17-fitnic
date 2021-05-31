@@ -38,7 +38,9 @@ router.get('/range', (req, res) =>
         },
       },
     ],
-    (err, data) => (err ? res.send(err) : res.json(data))
+    (err, data) => {
+      return err ? res.send(err) : res.json(data);
+    }
   )
 );
 
